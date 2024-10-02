@@ -524,3 +524,104 @@ nav {
 
 ### Utilisation
 Avec ces modifications, lorsque vous cliquez sur le bouton, le menu déroulant apparaîtra, affichant tous vos éléments de menu. Cliquer à nouveau masquera le menu. Vous pouvez personnaliser davantage les styles et le comportement en fonction de vos préférences de design.
+
+### ``test ``
+Bien sûr ! Voici un exemple détaillé de test pour le composant `Counter`, avec des explications sur chaque section du code. Cela vous aidera à comprendre comment les tests fonctionnent et comment vous pouvez les présenter lors de votre entretien.
+
+### Exemple de Test pour le Composant `Counter`
+
+**1. Structure du Fichier**
+
+Créez un fichier `Counter.test.js` dans le même répertoire que `counter.js`.
+
+```javascript
+// src/redux/Counter.test.js
+import React from 'react'; // Importation de React
+import { render, screen } from '@testing-library/react'; // Importation des utilitaires de testing
+import { Provider } from 'react-redux'; // Importation du Provider pour Redux
+import configureStore from 'redux-mock-store'; // Importation pour créer un store simulé
+import Counter from './counter'; // Importation du composant à tester
+
+// Configuration du store simulé
+const mockStore = configureStore([]);
+
+describe('Counter Component', () => { // Début du bloc de test pour le composant Counter
+  let store;
+
+  beforeEach(() => { // Avant chaque test, initialiser le store
+    store = mockStore({
+      count: 100, // État initial simulé
+    });
+  });
+
+  test('renders the counter with the initial count', () => { // Test pour vérifier l'affichage initial
+    render(
+      <Provider store={store}> // Envelopper le composant avec le Provider
+        <Counter /> // Rendu du composant Counter
+      </Provider>
+    );
+
+    // Vérification que le compteur affiche le bon nombre initial
+    expect(screen.getByText(/compteur : 100/i)).toBeInTheDocument();
+  });
+
+  test('increments the counter', () => { // Test pour vérifier l'incrémentation
+    const { getByText } = render(
+      <Provider store={store}>
+        <Counter />
+      </Provider>
+    );
+
+    getByText('+').click(); // Simuler un clic sur le bouton +
+
+    // Vérification que l'action d'incrémentation a été dispatchée
+    const actions = store.getActions();
+    expect(actions).toEqual([{ type: 'INCREMENT' }]); // Vérification de l'action envoyée
+  });
+
+  test('decrements the counter', () => { // Test pour vérifier la décrémentation
+    const { getByText } = render(
+      <Provider store={store}>
+        <Counter />
+      </Provider>
+    );
+
+    getByText('-').click(); // Simuler un clic sur le bouton -
+
+    // Vérification que l'action de décrémentation a été dispatchée
+    const actions = store.getActions();
+    expect(actions).toEqual([{ type: 'DECREMENT' }]); // Vérification de l'action envoyée
+  });
+});
+```
+
+### Explication du Code
+
+1. **Importations** :
+   - `React` : Nécessaire pour utiliser JSX.
+   - `render` et `screen` de `@testing-library/react` : Utilisés pour rendre le composant et accéder aux éléments du DOM.
+   - `Provider` de `react-redux` : Permet d'utiliser le store Redux dans les tests.
+   - `configureStore` : Permet de créer un store simulé pour les tests sans affecter l'état réel de l'application.
+
+2. **Configuration du Store** :
+   - `mockStore` : Crée un store simulé. Cela permet de tester le composant sans avoir besoin d'un store réel.
+   - `beforeEach` : Initialise le store avant chaque test avec un état initial où `count` est à 100.
+
+3. **Tests** :
+   - **Test d'affichage initial** :
+     - Le test vérifie si le composant `Counter` affiche correctement le nombre initial.
+     - `expect(screen.getByText(/compteur : 100/i)).toBeInTheDocument();` : Cela vérifie que le texte affiché contient "compteur : 100".
+
+   - **Test d'incrémentation** :
+     - Simule un clic sur le bouton "+".
+     - Vérifie que l'action `INCREMENT` a été envoyée au store en utilisant `store.getActions()`.
+
+   - **Test de décrémentation** :
+     - Simule un clic sur le bouton "-".
+     - Vérifie que l'action `DECREMENT` a été envoyée au store de la même manière.
+
+### Conclusion
+
+Cet exemple de test pour le composant `Counter` montre comment tester le rendu et l'interaction d'un composant React avec Redux. Lorsque vous présentez cela lors de votre entretien, mettez en avant l'importance de tester les composants pour s'assurer qu'ils fonctionnent comme prévu et que les actions Redux sont correctement dispatchées. Cela démontre également votre capacité à utiliser des outils de testing modernes.
+
+Si vous avez d'autres questions ou besoin d'autres exemples, n'hésitez pas à demander !
